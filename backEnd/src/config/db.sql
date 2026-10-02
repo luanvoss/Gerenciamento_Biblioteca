@@ -23,7 +23,13 @@ CREATE TABLE livros (
     Isbn VARCHAR(20) UNIQUE,
     Ano_Publicacao INT,
     Numero_Paginas INT,
-    sinopse TEXT
+    sinopse TEXT,
+    Id_Autores INT,
+
+    CONSTRAINT fk_livros_autores
+        FOREIGN KEY (Id_Autores)
+        REFERENCES autores(Id_Autores)
+        ON DELETE CASCADE
 );
 
 INSERT INTO livros (Titulo, Isbn, Ano_Publicacao, Numero_Paginas, sinopse)

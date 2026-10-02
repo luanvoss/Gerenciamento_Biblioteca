@@ -1,11 +1,12 @@
 const express = require("express");
-
 const app = express();
 
+const autoresRoute = require("./routes/autorRoute");
+
+
+
 app.use(express.json());
+app.use(autoresRoute);
 
-app.get("/", (req, res) => {
-    res.send("API da Biblioteca funcionando!");
-});
 
-module.exports = app;
+module.exports = app; 

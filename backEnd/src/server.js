@@ -1,26 +1,10 @@
-const express = require("express");
-const db = require("./config/db");
+const app = require('./app')
+const dotenv =require("dotenv");
+dotenv.config();
 
-const app = express();
+const PORT = process.env.API_PORT; 
 
-app.use(express.json());
-
-
-app.listen(3030, () => {
-    console.log("Servidor rodando na porta: 3030");
+app.listen(PORT, () => {
+     console.log(`Servidor rodando na porta: ${PORT}\nhttp://localhost:${PORT}`)
 });
 
-app.get("/livros", async (req, res) => {
-    try {
-        const [livros] = await db.query("SELECT * FROM livros");
-
-        res.json(livros);
-
-    } catch (erro) {
-        console.error(erro);
-
-        res.status(500).json({
-            mensagem: "Erro ao buscar livros"
-        });
-    }
-});
