@@ -20,13 +20,15 @@ const buscarLivrosPorId = async (req, res) => {
 
 
 const addLivros = async (req, res) => {
+
     const {
         Titulo,
         Isbn,
         Ano_Publicacao,
         Numero_Paginas,
         Sinopse,
-        Id_Autores
+        Id_Autores,
+        Id_Generos
     } = req.body;
     const novoLivro = await livrosModel.criar(
         Titulo,
@@ -34,8 +36,10 @@ const addLivros = async (req, res) => {
         Ano_Publicacao,
         Numero_Paginas,
         Sinopse,
-        Id_Autores
+        Id_Autores,
+        Id_Generos
     );
+
     res.status(201).json(novoLivro);
 };
 
@@ -47,7 +51,8 @@ const editarLivros = async (req, res) => {
         Ano_Publicacao,
         Numero_Paginas,
         Sinopse,
-        Id_Autores
+        Id_Autores,
+        Id_Generos
     } = req.body;
     const lista = await livrosModel.buscarPorId(id);
     if (!lista) {
@@ -62,7 +67,8 @@ const editarLivros = async (req, res) => {
         Ano_Publicacao,
         Numero_Paginas,
         Sinopse,
-        Id_Autores
+        Id_Autores,
+        Id_Generos
     );
     res.json(livrosAtualizado);
 };
@@ -80,6 +86,7 @@ const excluirLivro = async (req, res) => {
         mensagem: "Livro excluído com sucesso"
     });
 };
+
 
 module.exports = {
     buscarLivros,

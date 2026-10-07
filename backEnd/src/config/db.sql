@@ -23,7 +23,7 @@ CREATE TABLE livros (
     Isbn VARCHAR(20) UNIQUE,
     Ano_Publicacao INT,
     Numero_Paginas INT,
-    sinopse TEXT,
+    Sinopse TEXT,
     Id_Autores INT,
 
     CONSTRAINT fk_livros_autores
