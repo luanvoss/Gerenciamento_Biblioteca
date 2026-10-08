@@ -22,6 +22,26 @@ const buscarEmprestimoPorId = async (req, res) => {
     res.json(emprestimo);
 };
 
+const buscarEmprestimosPorLivro = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const emprestimos =
+            await emprestimosModel.buscarEmprestimosPorLivro(id);
+        if (emprestimos.length === 0) {
+            return res.status(404).json({
+                mensagem: "Nenhum empréstimo encontrado para este livro"
+            });
+        }
+        res.json(emprestimos);
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao buscar empréstimos do livro",
+            erro: error.message
+        });
+    }
+};
+
+
 const addEmprestimo = async (req, res) => {
 
     const { Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro } = req.body;
@@ -83,6 +103,7 @@ const excluirEmprestimo = async (req, res) => {
 module.exports = {
     buscarEmprestimo,
     buscarEmprestimoPorId,
+    buscarEmprestimosPorLivro,
     addEmprestimo,
     editarEmprestimo,
     excluirEmprestimo

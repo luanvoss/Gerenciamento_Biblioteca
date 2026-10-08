@@ -16,7 +16,22 @@ const buscarPorId = async (Id_Emprestimo) => {
 
     return emprestimo[0];
 };
+const buscarEmprestimosPorLivro = async (Id_Livro) => {
+    const [emprestimos] = await db.query(
+        `SELECT
+            emprestimos.*,
+            livros.Titulo
+        FROM emprestimos
 
+        INNER JOIN livros
+            ON emprestimos.Id_Livro = livros.Id_Livro
+
+        WHERE emprestimos.Id_Livro = ?`,
+        [Id_Livro]
+    );
+
+    return emprestimos;
+};
 const criar = async (Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro) => {
     const [emprestimo] = await db.query(
         "INSERT INTO emprestimos (Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro) VALUES (?, ?, ?, ?)",
@@ -71,6 +86,7 @@ const excluir = async (Id_Emprestimo) => {
 module.exports = {
     buscarTodos,
     buscarPorId,
+    buscarEmprestimosPorLivro,
     criar,
     editar,
     excluir

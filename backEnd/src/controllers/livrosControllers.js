@@ -18,6 +18,27 @@ const buscarLivrosPorId = async (req, res) => {
     res.json(livros);
 };
 
+const buscarLivrosPorAutor = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const livros = await livrosModel.buscarLivrosPorAutor(id);
+
+        if (livros.length === 0) {
+            return res.status(404).json({
+                mensagem: "Nenhum livro encontrado para este autor"
+            });
+        }
+
+        res.json(livros);
+
+    } catch (error) {
+        res.status(500).json({
+            mensagem: "Erro ao buscar livros do autor",
+            erro: error.message
+        });
+    }
+};
 
 const addLivros = async (req, res) => {
 
@@ -91,6 +112,7 @@ const excluirLivro = async (req, res) => {
 module.exports = {
     buscarLivros,
     buscarLivrosPorId,
+    buscarLivrosPorAutor,
     addLivros,
     editarLivros,
     excluirLivro
