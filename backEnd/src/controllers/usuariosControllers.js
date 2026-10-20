@@ -54,10 +54,10 @@ const addUsuarios = async (req, res) => {
             });
         }
         const { salt, hash } = await gerarHashSenha(senha);
-        const { iv, tag, valorCriptografado } = criptografar(CPF);
+        const { iv, tag, valorCriptografado:cpfCriptografado } = criptografar(CPF);
         await usuariosModel.criar({
             Nome_Completo,
-            CPF: valorCriptografado,
+            CPF: cpfCriptografado,
             cpf_iv: iv,
             cpf_tag: tag,
             Email,
