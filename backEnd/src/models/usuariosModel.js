@@ -17,18 +17,19 @@ const buscarPorId = async (Id_Usuario) => {
     return usuarios[0];
 };
 
-const criar = async (Nome_Completo, CPF, Email, Telefone, Data_Nascimento) => {
+const criar = async ({ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt
+}) => {
     const [usuario] = await db.query(
-        "INSERT INTO usuarios (Nome_Completo, CPF, Email, Telefone, Data_Nascimento) VALUES (?, ?, ?, ?, ?)",
-        [Nome_Completo, CPF, Email, Telefone, Data_Nascimento]
+        `INSERT INTO usuarios (Nome_Completo, CPF, cpf_iv, cpf_tag, Email,Telefone, Data_Nascimento, senha_hash, senha_salt)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt]
     );
 
     return {
         Id_Usuario: usuario.insertId,
-        Nome_Completo, 
-        CPF, 
-        Email, 
-        Telefone, 
+        Nome_Completo,
+        Email,
+        Telefone,
         Data_Nascimento
     };
 };

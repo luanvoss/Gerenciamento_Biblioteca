@@ -57,10 +57,14 @@ VALUES
 CREATE TABLE usuarios (
     Id_Usuario INT AUTO_INCREMENT PRIMARY KEY,
     Nome_Completo VARCHAR(150) NOT NULL,
-    CPF VARCHAR(20) NOT NULL,
+    CPF VARBINARY(32) NOT NULL,
+    cpf_iv BINARY(12) NOT NULL,
+    cpf_tag BINARY(16) NOT NULL,
     Email VARCHAR(150) NOT NULL,
     Telefone VARCHAR(20) NOT NULL,
-    Data_Nascimento DATE
+    Data_Nascimento DATE,
+    senha_hash BINARY(64) NOT NULL,
+    senha_salt BINARY(16) NOT NULL
 );
 
 INSERT INTO usuarios 
