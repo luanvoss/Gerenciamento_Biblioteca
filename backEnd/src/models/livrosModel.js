@@ -56,7 +56,7 @@ const buscarPorId = async (Id_Livro) => {
                 DISTINCT generos.Id_Genero
             ) AS Id_Generos,
             GROUP_CONCAT(
-                DISTINCT generos.Nome
+                DISTINCT generos.Genero
             ) AS Generos
         FROM livros
         LEFT JOIN autores_has_livros

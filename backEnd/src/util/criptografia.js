@@ -6,7 +6,7 @@ const crypto = require("crypto");
 const ALGORITIMO = "aes-256-gcm";
 const CHAVE = Buffer.from(process.env.CRYPTO_KEY, "hex");
 
-if(CHAVE.length !== 32) {
+if (CHAVE.length !== 32) {
     throw new Error("CRYPTO KEY Inválida: A chave precisa ter 32 bytes (64 carácteres)");
 };
 
@@ -27,8 +27,8 @@ function descriptografar({ ivArmazenado, tagArmazenada, valorArmazenado }) {
     const valorDescriptografado = Buffer.concat([decipher.update(valorArmazenado), decipher.final()]);
 
     return valorDescriptografado.toString("utf8");
-};
 
+};
 module.exports = {
     criptografar,
     descriptografar

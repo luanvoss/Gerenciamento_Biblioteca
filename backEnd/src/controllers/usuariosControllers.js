@@ -5,14 +5,30 @@ const { criptografar, descriptografar } = require("../util/criptografia");
 
 
 const buscarUsuarios = async (req, res) => {
- try {
-    const usuario = await usuariosModel.buscarTodos();
-
-    res.json(usuario);
-     } catch(error) {
-        console.log(error);
-        return res.status(500).json({error: "Erro ao buscar usuários"});
-    };
+    try {
+        const usuarios = await usuariosModel.buscarTodos();
+        const usuariosFormatados = usuarios.map((usuario) => {
+            const CPF = descriptografar({
+                ivArmazenado: usuario.cpf_iv,
+                tagArmazenada: usuario.cpf_tag,
+                valorArmazenado: usuario.CPF
+            });
+            return {
+                Id_Usuario: usuario.Id_Usuario,
+                Nome_Completo: usuario.Nome_Completo,
+                CPF,
+                Email: usuario.Email,
+                Telefone: usuario.Telefone,
+                Data_Nascimento: usuario.Data_Nascimento
+            };
+        });
+        return res.json(usuariosFormatados);
+    } catch (error) {
+        console.error("Erro ao buscar usuários:", error);
+        return res.status(500).json({
+            error: "Erro ao buscar usuários"
+        });
+    }
 };
 
 const buscarUsuariosPorId = async (req, res) => {
@@ -47,14 +63,14 @@ const buscarUsuariosPorId = async (req, res) => {
 
 const addUsuarios = async (req, res) => {
     try {
-        const {Nome_Completo, CPF, Email, Telefone, Data_Nascimento,senha } = req.body;
+        const { Nome_Completo, CPF, Email, Telefone, Data_Nascimento, senha } = req.body;
         if (!Nome_Completo || !CPF || !Email || !Telefone || !senha) {
             return res.status(400).json({
                 error: "Preencha todos os campos obrigatórios"
             });
         }
         const { salt, hash } = await gerarHashSenha(senha);
-        const { iv, tag, valorCriptografado:cpfCriptografado } = criptografar(CPF);
+        const { iv, tag, valorCriptografado: cpfCriptografado } = criptografar(CPF);
         await usuariosModel.criar({
             Nome_Completo,
             CPF: cpfCriptografado,
