@@ -22,7 +22,7 @@ const criar = async ({ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Dat
     const [usuario] = await db.query(
         `INSERT INTO usuarios (Nome_Completo, CPF, cpf_iv, cpf_tag, Email,Telefone, Data_Nascimento, senha_hash, senha_salt)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt]
+        [Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt]
     );
 
     return {
@@ -34,21 +34,42 @@ const criar = async ({ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Dat
     };
 };
 
-const editar = async (Id_Usuario, Nome_Completo, CPF, Email, Telefone, Data_Nascimento) => {
-    await db.query(
-        "UPDATE usuarios SET Nome_Completo=?, CPF=?, Email=?, Telefone=?, Data_Nascimento=? WHERE Id_Usuario=?",
-        [Nome_Completo, CPF, Email, Telefone, Data_Nascimento, Id_Usuario]
-    );
+async function editar(id, dados) {
+    const camposPermitidos = [
+        "Nome_Completo",
+        "CPF",
+        "cpf_iv",
+        "cpf_tag",
+        "Email",
+        "Telefone",
+        "Data_Nascimento",
+        "senha_hash",
+        "senha_salt"
+    ];
+    const campos = Object.keys(dados);
 
-    return {
-        Id_Usuario,
-        Nome_Completo, 
-        CPF, 
-        Email, 
-        Telefone, 
-        Data_Nascimento
+    // campos.some() --> verifica se pelo menos um campo atende x condição
+    // camposPermitidos.includes(campo) --> verifica se o campo existe na lista 
+    // ! --> valor invertido 
+    if (campos.length === 0 || campos.some(campo => !camposPermitidos.includes(campo))) {
+        throw new Error("variáveis de atualização inválidos ");
     };
+
+    const atribuicoes = campos.map(campo => `\`${campo}\` = ?`).join(", ");
+    const valores = campos.map(campo => dados[campo]);
+    const sql = `
+     UPDATE usuarios 
+     SET ${atribuicoes}
+     WHERE id_usuario = ?;
+`;
+
+    //spread operator
+    const [resultado] = await db.execute(sql, [...valores, id])
+
+    return resultado;
+
 };
+
 
 const excluir = async (Id_Usuario) => {
     const [resultado] = await db.query(

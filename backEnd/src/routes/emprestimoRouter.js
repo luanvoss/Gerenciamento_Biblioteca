@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 const emprestimoControllers = require("../controllers/emprestimoControllers");
 
-router.get("/emprestimo", emprestimoControllers.buscarEmprestimo);
-router.get("/emprestimo/:id", emprestimoControllers.buscarEmprestimoPorId);
-router.get("/emprestimo/:id/emprestimos",emprestimoControllers.buscarEmprestimosPorLivro);
-router.post("/emprestimo", emprestimoControllers.addEmprestimo);
-router.put("/emprestimo/:id", emprestimoControllers.editarEmprestimo);
-router.delete("/emprestimo/:id", emprestimoControllers.excluirEmprestimo);
+router.get("/", emprestimoControllers.buscarEmprestimo);
+router.get("/:id", emprestimoControllers.buscarEmprestimoPorId);
+router.get("/:id/emprestimos",emprestimoControllers.buscarEmprestimosPorLivro);
+router.post("/", emprestimoControllers.addEmprestimo);
+router.put("/:id", emprestimoControllers.editarEmprestimo);
+router.delete("/:id", emprestimoControllers.excluirEmprestimo);
 
 module.exports= router; 

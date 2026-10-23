@@ -94,29 +94,52 @@ const addUsuarios = async (req, res) => {
 };
 
 const editarUsuarios = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const usuario = await usuariosModel.buscarPorId(id);
+        if (!usuario) {
+            return res.status(404).json({
+                error: "Usuário não encontrado"
+            });
+        };
+        const { Nome_Completo, CPF, Email, Telefone, Data_Nascimento, senha } = req.body;
+        const dadosAtualizados = {};
 
-    const id = req.params.id;
+        if (Nome_Completo !== undefined) {
+            dadosAtualizados.Nome_Completo = Nome_Completo;
+        };
+        if (Email !== undefined) {
+            dadosAtualizados.Email = Email;
+        };
+        if (Telefone !== undefined) {
+            dadosAtualizados.Telefone = Telefone;
+        };
+        if (Data_Nascimento !== undefined) {
+            dadosAtualizados.Data_Nascimento = Data_Nascimento;
+        };
+        if (CPF !== undefined) {
+            const{iv: cpf_iv,tag:cpf_tag, valorCriptografado:cpfCriptografado} = criptografar(CPF);
+            dadosAtualizados.CPF = CPF;
+            dadosAtualizados.cpf_iv = cpf_iv;
+            dadosAtualizados.cpf_tag = cpf_tag;
+        };
+        if (senha !== undefined) {
+           const{salt: senha_salt,hash: senha_hash} = gerarHashSenha(senha);
+           dadosAtualizados.senha_salt = senha_salt;
+           dadosAtualizados.senha_hash = senha_hash;
+        };
 
-    const { Nome_Completo, CPF, Email, Telefone, Data_Nascimento } = req.body;
-
-    const lista = await usuariosModel.buscarPorId(id);
-
-    if (!lista) {
-        return res.status(404).json({
-            mensagem: "Usuário não encontrado"
+        await usuariosModel.editar(id,dadosAtualizados);
+        
+        return res.json({
+            mensagem: "Usuário editado com sucesso"
+        })
+    } catch(error){
+        console.log(error);
+        return res.status(500).json({
+        mensagem : "Erro ao editar usuário"
         });
-    }
-
-    const usuariosAtualizado = await usuariosModel.editar(
-        id,
-        Nome_Completo,
-        CPF,
-        Email,
-        Telefone,
-        Data_Nascimento
-    );
-
-    res.json(usuariosAtualizado);
+    };
 };
 
 const excluirUsuarios = async (req, res) => {
