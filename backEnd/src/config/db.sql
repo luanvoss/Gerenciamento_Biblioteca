@@ -32,16 +32,35 @@ CREATE TABLE livros (
         ON DELETE CASCADE
 );
 
-INSERT INTO livros (Titulo, Isbn, Ano_Publicacao, Numero_Paginas, sinopse)
+INSERT INTO livros 
+(Titulo, Isbn, Ano_Publicacao, Numero_Paginas, Sinopse, Id_Autores)
 VALUES
-('Dom Casmurro', '9788535902778', 1899, 256,
-'Romance de Machado de Assis que narra a história de Bentinho e Capitu.'),
+(
+    'Dom Casmurro',
+    '9788535902778',
+    1899,
+    256,
+    'Romance de Machado de Assis que narra a história de Bentinho e Capitu.',
+    1
+),
 
-('O Hobbit', '9788595084742', 1937, 310,
-'A aventura de Bilbo Bolseiro em uma jornada pela Terra-média.'),
+(
+    'O Hobbit',
+    '9788595084742',
+    1937,
+    310,
+    'A aventura de Bilbo Bolseiro em uma jornada pela Terra-média.',
+    3
+),
 
-('Harry Potter e a Pedra Filosofal', '9788532530783', 1997, 264,
-'A história de Harry Potter, um jovem que descobre ser um bruxo e começa seus estudos em Hogwarts.');
+(
+    'Harry Potter e a Pedra Filosofal',
+    '9788532530783',
+    1997,
+    264,
+    'A história de Harry Potter, um jovem que descobre ser um bruxo e começa seus estudos em Hogwarts.',
+    2
+);
 
 CREATE TABLE genero (
     Id_Genero INT AUTO_INCREMENT PRIMARY KEY,
@@ -112,3 +131,27 @@ VALUES
 (1, 1),
 (2, 2),
 (3, 3);
+
+ALTER TABLE usuarios
+ADD COLUMN Tipo_Usuario ENUM('admin', 'comum')
+DEFAULT 'comum';
+
+{
+   "Nome_Completo": "Administrador Biblioteca",
+    "CPF": "12345678900",
+    "Email": "admin@biblioteca.com",
+    "Telefone": "47999999999",
+    "Data_Nascimento": "1995-05-15",
+    "senha": "Senha123"
+}
+
+UPDATE usuarios
+SET Tipo_Usuario = 'admin'
+WHERE Id_Usuario = (
+    SELECT Id_Usuario
+    FROM (
+        SELECT Id_Usuario
+        FROM usuarios
+        WHERE Email = 'admin@biblioteca.com'
+    ) AS usuario
+);

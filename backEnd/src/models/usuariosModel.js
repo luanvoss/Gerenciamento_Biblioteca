@@ -1,3 +1,4 @@
+
 const db = require("../config/db");
 
 const buscarTodos = async () => {
@@ -17,12 +18,44 @@ const buscarPorId = async (Id_Usuario) => {
     return usuarios[0];
 };
 
-const criar = async ({ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt
+const criar = async ({
+    Nome_Completo,
+    CPF,
+    cpf_iv,
+    cpf_tag,
+    Email,
+    Telefone,
+    Data_Nascimento,
+    senha_hash,
+    senha_salt,
+    Tipo_Usuario = "comum"
 }) => {
     const [usuario] = await db.query(
-        `INSERT INTO usuarios (Nome_Completo, CPF, cpf_iv, cpf_tag, Email,Telefone, Data_Nascimento, senha_hash, senha_salt)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Data_Nascimento, senha_hash, senha_salt]
+        `INSERT INTO usuarios (
+            Nome_Completo,
+            CPF,
+            cpf_iv,
+            cpf_tag,
+            Email,
+            Telefone,
+            Data_Nascimento,
+            senha_hash,
+            senha_salt,
+            Tipo_Usuario
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+            Nome_Completo,
+            CPF,
+            cpf_iv,
+            cpf_tag,
+            Email,
+            Telefone,
+            Data_Nascimento,
+            senha_hash,
+            senha_salt,
+            Tipo_Usuario
+        ]
     );
 
     return {
@@ -30,7 +63,8 @@ const criar = async ({ Nome_Completo, CPF, cpf_iv, cpf_tag, Email, Telefone, Dat
         Nome_Completo,
         Email,
         Telefone,
-        Data_Nascimento
+        Data_Nascimento,
+        Tipo_Usuario
     };
 };
 
@@ -46,30 +80,26 @@ async function editar(id, dados) {
         "senha_hash",
         "senha_salt"
     ];
+
     const campos = Object.keys(dados);
 
-    // campos.some() --> verifica se pelo menos um campo atende x condição
-    // camposPermitidos.includes(campo) --> verifica se o campo existe na lista 
-    // ! --> valor invertido 
     if (campos.length === 0 || campos.some(campo => !camposPermitidos.includes(campo))) {
-        throw new Error("variáveis de atualização inválidos ");
-    };
+        throw new Error("Variáveis de atualização inválidas");
+    }
 
     const atribuicoes = campos.map(campo => `\`${campo}\` = ?`).join(", ");
     const valores = campos.map(campo => dados[campo]);
-    const sql = `
-     UPDATE usuarios 
-     SET ${atribuicoes}
-     WHERE id_usuario = ?;
-`;
 
-    //spread operator
-    const [resultado] = await db.execute(sql, [...valores, id])
+    const sql = `
+        UPDATE usuarios
+        SET ${atribuicoes}
+        WHERE Id_Usuario = ?
+    `;
+
+    const [resultado] = await db.execute(sql, [...valores, id]);
 
     return resultado;
-
-};
-
+}
 
 const excluir = async (Id_Usuario) => {
     const [resultado] = await db.query(

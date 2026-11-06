@@ -26,7 +26,7 @@ const buscarEmprestimosPorLivro = async (req, res) => {
     try {
         const { id } = req.params;
         const emprestimos =
-            await emprestimosModel.buscarEmprestimosPorLivro(id);
+            await emprestimoModel.buscarEmprestimosPorLivro(id);
         if (emprestimos.length === 0) {
             return res.status(404).json({
                 mensagem: "Nenhum empréstimo encontrado para este livro"
