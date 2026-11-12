@@ -1,3 +1,4 @@
+
 const db = require("../config/db");
 
 const buscarTodos = async () => {
@@ -16,6 +17,7 @@ const buscarPorId = async (Id_Emprestimo) => {
 
     return emprestimo[0];
 };
+
 const buscarEmprestimosPorLivro = async (Id_Livro) => {
     const [emprestimos] = await db.query(
         `SELECT
@@ -32,18 +34,34 @@ const buscarEmprestimosPorLivro = async (Id_Livro) => {
 
     return emprestimos;
 };
-const criar = async (Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro) => {
+
+const criar = async (
+    Data_Emprestimo,
+    Data_Devolucao,
+    Id_Usuario,
+    Id_Livro,
+    Status
+) => {
     const [emprestimo] = await db.query(
-        "INSERT INTO emprestimos (Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro) VALUES (?, ?, ?, ?)",
-        [Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro]
+        `INSERT INTO emprestimos
+        (Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro, Status)
+        VALUES (?, ?, ?, ?, ?)`,
+        [
+            Data_Emprestimo,
+            Data_Devolucao,
+            Id_Usuario,
+            Id_Livro,
+            Status || 'pendente'
+        ]
     );
 
     return {
         Id_Emprestimo: emprestimo.insertId,
-        Data_Emprestimo, 
-        Data_Devolucao, 
-        Id_Usuario, 
-        Id_Livro
+        Data_Emprestimo,
+        Data_Devolucao,
+        Id_Usuario,
+        Id_Livro,
+        Status: Status || 'pendente'
     };
 };
 
@@ -52,24 +70,34 @@ const editar = async (
     Data_Emprestimo,
     Data_Devolucao,
     Id_Usuario,
-    Id_Livro
+    Id_Livro,
+    Status
 ) => {
     await db.query(
-        "UPDATE emprestimos SET Data_Emprestimo=?, Data_Devolucao=?, Id_Usuario=?, Id_Livro=? WHERE Id_Emprestimo=?",
+        `UPDATE emprestimos
+        SET Data_Emprestimo=?,
+            Data_Devolucao=?,
+            Id_Usuario=?,
+            Id_Livro=?,
+            Status=?
+        WHERE Id_Emprestimo=?`,
         [
             Data_Emprestimo,
             Data_Devolucao,
             Id_Usuario,
             Id_Livro,
+            Status,
             Id_Emprestimo
         ]
     );
+
     return {
         Id_Emprestimo,
         Data_Emprestimo,
         Data_Devolucao,
         Id_Usuario,
-        Id_Livro
+        Id_Livro,
+        Status
     };
 };
 

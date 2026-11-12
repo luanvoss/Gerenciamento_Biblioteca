@@ -100,15 +100,16 @@ CREATE TABLE emprestimos (
     Data_Emprestimo DATE,
     Data_Devolucao DATE,
     Id_Usuario INT,
-    Id_Livro INT
+    Id_Livro INT,
+    Status ENUM('ativo', 'atrasado', 'pendente') DEFAULT 'pendente'
 );
 
 INSERT INTO emprestimos
-(Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro)
+(Data_Emprestimo, Data_Devolucao, Id_Usuario, Id_Livro, Status)
 VALUES
-('2026-09-20', '2026-10-04', 1, 1),
-('2026-09-22', '2026-10-06', 2, 2),
-('2026-09-25', '2026-10-09', 3, 3);
+('2026-09-20', '2026-10-04', 1, 1, 'atrasado'),
+('2026-09-22', '2026-10-06', 2, 2, 'atrasado'),
+('2026-09-25', '2026-10-09', 3, 3, 'atrasado');
 
 CREATE TABLE autores_has_livros (
     Id_Autores INT,
@@ -136,15 +137,6 @@ ALTER TABLE usuarios
 ADD COLUMN Tipo_Usuario ENUM('admin', 'comum')
 DEFAULT 'comum';
 
-{
-   "Nome_Completo": "Administrador Biblioteca",
-    "CPF": "12345678900",
-    "Email": "admin@biblioteca.com",
-    "Telefone": "47999999999",
-    "Data_Nascimento": "1995-05-15",
-    "senha": "Senha123"
-}
-
 UPDATE usuarios
 SET Tipo_Usuario = 'admin'
 WHERE Id_Usuario = (
@@ -155,3 +147,14 @@ WHERE Id_Usuario = (
         WHERE Email = 'admin@biblioteca.com'
     ) AS usuario
 );
+
+
+//
+{
+   "Nome_Completo": "Administrador Biblioteca",
+    "CPF": "12345678900",
+    "Email": "admin@biblioteca.com",
+    "Telefone": "47999999999",
+    "Data_Nascimento": "1995-05-15",
+    "senha": "Senha123"
+}
